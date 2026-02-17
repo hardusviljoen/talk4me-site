@@ -47,12 +47,12 @@ function generateImage() {
     }
 
     // ?? NAME — moved 5% higher
-    let nameY = canvas.height * 0.10;  // previously ~25%
+    let nameY = canvas.height * 0.15;  // previously ~25%
     ctx.font = "bold 85px Arial";
     wrapText(name, canvas.width / 2, nameY, maxTextWidth, 95);
 
     // ?? LOWER SECTION START (bottom half anchor)
-    let y = canvas.height * 0.50;
+    let y = canvas.height * 0.45;
 
     ctx.font = "55px Arial";
     y = wrapText("If I cannot speak, please call:", canvas.width / 2, y, maxTextWidth, 70);
