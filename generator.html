@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Your Screen – Talk4.me</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Create Your Emergency Screen</h1>
+
+    <form id="screenForm">
+        <input type="text" id="name" placeholder="Full Name" required><br><br>
+        <input type="text" id="contactName" placeholder="Emergency Contact Name" required><br><br>
+        <input type="text" id="contactNumber" placeholder="Emergency Contact Number" required><br><br>
+        <input type="text" id="allergies" placeholder="Allergies (optional)"><br><br>
+        <input type="text" id="conditions" placeholder="Medical Conditions (optional)"><br><br>
+
+        <button type="button" onclick="generateImage()">Generate Screen</button>
+    </form>
+
+    <br>
+    <canvas id="previewCanvas" width="400" height="700"></canvas>
+
+    <br><br>
+    <a id="downloadLink" style="display:none;">Download Lock Screen</a>
+
+</div>
+
+<script src="generator.js"></script>
+
+</body>
+</html>
