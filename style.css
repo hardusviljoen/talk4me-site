@@ -46,3 +46,24 @@ button:hover {
     font-size: 14px;
     color: #666;
 }
+
+.signup-section {
+    margin-top: 50px;
+}
+
+.signup-section h3 {
+    font-size: 24px;
+    color: #1f4e5f;
+}
+
+.signup-section p {
+    max-width: 500px;
+    margin: 15px auto;
+    font-size: 16px;
+}
+
+.small-note {
+    font-size: 13px;
+    color: #777;
+    margin-top: 15px;
+}
