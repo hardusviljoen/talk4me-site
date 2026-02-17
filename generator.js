@@ -3,54 +3,95 @@ function generateImage() {
     const canvas = document.getElementById("previewCanvas");
     const ctx = canvas.getContext("2d");
 
-    const name = document.getElementById("name").value;
-    const contactName = document.getElementById("contactName").value;
-    const contactNumber = document.getElementById("contactNumber").value;
-    const allergies = document.getElementById("allergies").value;
-    const conditions = document.getElementById("conditions").value;
+    const exportWidth = 1080;
+    const exportHeight = 1920;
 
-	// Background
-	ctx.fillStyle = "#f4f8f9";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    canvas.width = exportWidth;
+    canvas.height = exportHeight;
 
-	ctx.fillStyle = "#1f4e5f";
-	ctx.textAlign = "center";
+    const name = document.getElementById("name").value.trim();
+    const contactName = document.getElementById("contactName").value.trim();
+    const contactNumber = document.getElementById("contactNumber").value.trim();
+    const allergies = document.getElementById("allergies").value.trim();
+    const conditions = document.getElementById("conditions").value.trim();
 
-	let y = 180;
+    // Background
+    ctx.fillStyle = "#f4f8f9";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-	ctx.font = "bold 40px Arial";
-	ctx.fillText(name, canvas.width / 2, y);
+    ctx.fillStyle = "#1f4e5f";
+    ctx.textAlign = "center";
 
-	y += 80;
+    const maxTextWidth = canvas.width * 0.85;
 
-	ctx.font = "24px Arial";
-	ctx.fillText("If I cannot speak, please call:", canvas.width / 2, y);
+    function wrapText(text, x, y, maxWidth, lineHeight) {
+        const words = text.split(" ");
+        let line = "";
 
-	y += 70;
+        for (let n = 0; n < words.length; n++) {
+            const testLine = line + words[n] + " ";
+            const metrics = ctx.measureText(testLine);
+            const testWidth = metrics.width;
 
-	ctx.font = "bold 32px Arial";
-	ctx.fillText(contactName, canvas.width / 2, y);
+            if (testWidth > maxWidth && n > 0) {
+                ctx.fillText(line, x, y);
+                line = words[n] + " ";
+                y += lineHeight;
+            } else {
+                line = testLine;
+            }
+        }
 
-	y += 50;
+        ctx.fillText(line, x, y);
+        return y + lineHeight;
+    }
 
-	ctx.fillText(contactNumber, canvas.width / 2, y);
+    // ?? NAME — moved 5% higher
+    let nameY = canvas.height * 0.10;  // previously ~25%
+    ctx.font = "bold 85px Arial";
+    wrapText(name, canvas.width / 2, nameY, maxTextWidth, 95);
 
-	y += 80;
+    // ?? LOWER SECTION START (bottom half anchor)
+    let y = canvas.height * 0.50;
 
-	ctx.font = "22px Arial";
+    ctx.font = "55px Arial";
+    y = wrapText("If I cannot speak, please call:", canvas.width / 2, y, maxTextWidth, 70);
 
-	if (allergies) {
-		ctx.fillText("Allergy: " + allergies, canvas.width / 2, y);
-		y += 50;
-	}
+    y += 30;
 
-	if (conditions) {
-		ctx.fillText("Condition: " + conditions, canvas.width / 2, y);
-		y += 50;
-	}
+    ctx.font = "bold 70px Arial";
+    y = wrapText(contactName, canvas.width / 2, y, maxTextWidth, 80);
 
-	ctx.font = "16px Arial";
-	ctx.fillText("talk4.me", canvas.width / 2, canvas.height - 60);
+    ctx.font = "bold 70px Arial";
+    y = wrapText(contactNumber, canvas.width / 2, y, maxTextWidth, 80);
+
+    y += 50;
+
+    // ?? Allergies
+    if (allergies) {
+        ctx.font = "bold 60px Arial";
+        y = wrapText("ALLERGIES", canvas.width / 2, y, maxTextWidth, 70);
+
+        ctx.font = "55px Arial";
+        y = wrapText(allergies, canvas.width / 2, y, maxTextWidth, 70);
+
+        y += 30;
+    }
+
+    // ?? Conditions
+    if (conditions) {
+        ctx.font = "bold 60px Arial";
+        y = wrapText("CONDITIONS", canvas.width / 2, y, maxTextWidth, 70);
+
+        ctx.font = "55px Arial";
+        y = wrapText(conditions, canvas.width / 2, y, maxTextWidth, 70);
+
+        y += 30;
+    }
+
+    // ?? Branding (above fingerprint zone)
+    ctx.font = "40px Arial";
+    ctx.fillText("talk4.me", canvas.width / 2, canvas.height * 0.92);
 
     // Enable download
     const link = document.getElementById("downloadLink");
