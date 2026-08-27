@@ -1,39 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>Create Your Screen – Talk4.me</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Create your Talk4.me emergency lock screen."
+    >
+
+    <title>Create Your Screen â€“ Talk4.me</title>
+
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body class="generator-page">
 
-<div class="container">
-    <h1>Create Your Emergency Screen</h1>
+<main class="generator-container">
 
-    <form id="screenForm">
-        <input type="text" id="name" placeholder="Full Name" required><br><br>
-        <input type="text" id="contactName" placeholder="Emergency Contact Name" required><br><br>
-        <input type="text" id="contactNumber" placeholder="Emergency Contact Number" required><br><br>
-        <input type="text" id="allergies" placeholder="Allergies (optional)"><br><br>
-        <input type="text" id="conditions" placeholder="Medical Conditions (optional)"><br><br>
+    <header class="generator-header">
 
-        <button type="button" onclick="generateImage()">Generate Screen</button>
+        <a href="index.html" class="generator-brand">
+            Talk4.me
+        </a>
+
+        <h1>Create Your Emergency Screen</h1>
+
+        <p>
+            Enter the information you want someone helping you
+            to see in an emergency.
+        </p>
+
+    </header>
+
+
+    <form id="screenForm" novalidate>
+
+        <div class="form-field">
+
+            <label for="name">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="e.g. John Smith"
+                autocomplete="name"
+                maxlength="80"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-field">
+
+            <label for="contactName">
+                Emergency Contact Name
+            </label>
+
+            <input
+                type="text"
+                id="contactName"
+                name="contactName"
+                placeholder="e.g. Mary Smith"
+                autocomplete="off"
+                maxlength="80"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-field">
+
+            <label for="contactNumber">
+                Emergency Contact Number
+            </label>
+
+            <input
+                type="tel"
+                id="contactNumber"
+                name="contactNumber"
+                placeholder="e.g. +27 82 123 4567"
+                autocomplete="tel"
+                maxlength="30"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-field">
+
+            <label for="allergies">
+                Allergies
+                <span>(optional)</span>
+            </label>
+
+            <input
+                type="text"
+                id="allergies"
+                name="allergies"
+                placeholder="e.g. Penicillin"
+                maxlength="150"
+            >
+
+        </div>
+
+
+        <div class="form-field">
+
+            <label for="conditions">
+                Medical Conditions
+                <span>(optional)</span>
+            </label>
+
+            <input
+                type="text"
+                id="conditions"
+                name="conditions"
+                placeholder="e.g. Diabetes"
+                maxlength="150"
+            >
+
+        </div>
+
+
+        <div
+            id="formMessage"
+            class="form-message"
+            role="alert"
+            aria-live="polite"
+        ></div>
+
+
+        <button
+            type="submit"
+            class="generate-btn"
+        >
+            Generate My Screen
+        </button>
+
     </form>
 
-    <br>
 
-	<div class="phone-preview">
-	    <canvas id="previewCanvas"></canvas>
-	</div>
+    <!-- PHONE PREVIEW -->
 
-    <br><br>
-    <a id="downloadLink" style="display:none;">Download Lock Screen</a>
+    <section class="preview-section">
 
-</div>
+        <h2>Preview</h2>
+
+        <div class="phone-preview">
+
+            <canvas id="previewCanvas"></canvas>
+
+        </div>
+
+    </section>
+
+
+    <!-- DOWNLOAD -->
+
+    <section class="download-section">
+
+        <a
+            id="downloadLink"
+            class="download-btn"
+            style="display:none;"
+        >
+            Download Lock Screen
+        </a>
+
+        <p class="privacy-note">
+            Your information stays on your device.
+            Talk4.me does not upload or store your emergency information.
+        </p>
+
+    </section>
+
+
+    <!-- INSTRUCTIONS -->
+
+    <section class="installation-help">
+
+        <h2>What's next?</h2>
+
+        <ol>
+
+            <li>
+                Generate and download your screen.
+            </li>
+
+            <li>
+                Open the downloaded image on your phone.
+            </li>
+
+            <li>
+                Choose <strong>Set as wallpaper</strong>.
+            </li>
+
+            <li>
+                Select your <strong>Lock screen</strong>.
+            </li>
+
+        </ol>
+
+        <p>
+            You can return to Talk4.me at any time to create
+            an updated screen.
+        </p>
+
+    </section>
+
+
+    <footer class="generator-footer">
+
+        <a href="index.html">
+            Back to Talk4.me
+        </a>
+
+    </footer>
+
+</main>
+
 
 <script src="generator.js"></script>
 
 </body>
+
 </html>
