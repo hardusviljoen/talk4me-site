@@ -1,13 +1,29 @@
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("screenForm");
+
+    if (!form) {
+        return;
+    }
+
+    form.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        generateImage();
+
+    });
+
+});
+
+
 function generateImage() {
 
     const canvas = document.getElementById("previewCanvas");
     const ctx = canvas.getContext("2d");
 
-    const exportWidth = 1080;
-    const exportHeight = 1920;
-
-    canvas.width = exportWidth;
-    canvas.height = exportHeight;
+    const message = document.getElementById("formMessage");
+    const downloadLink = document.getElementById("downloadLink");
 
     const name = document.getElementById("name").value.trim();
     const contactName = document.getElementById("contactName").value.trim();
@@ -15,88 +31,314 @@ function generateImage() {
     const allergies = document.getElementById("allergies").value.trim();
     const conditions = document.getElementById("conditions").value.trim();
 
-    // Background
+
+    /*
+     * Required information
+     */
+
+    if (!name || !contactName || !contactNumber) {
+
+        message.textContent =
+            "Please enter your name, emergency contact name and contact number.";
+
+        message.classList.add("visible");
+
+        return;
+    }
+
+    message.textContent = "";
+    message.classList.remove("visible");
+
+
+    /*
+     * High-resolution output
+     */
+
+    const exportWidth = 1080;
+    const exportHeight = 1920;
+
+    canvas.width = exportWidth;
+    canvas.height = exportHeight;
+
+
+    /*
+     * Background
+     */
+
     ctx.fillStyle = "#f4f8f9";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /*
+     * Main text colour
+     */
 
     ctx.fillStyle = "#1f4e5f";
+
     ctx.textAlign = "center";
+
+    ctx.textBaseline = "alphabetic";
+
+
+    const centerX = canvas.width / 2;
 
     const maxTextWidth = canvas.width * 0.85;
 
-    function wrapText(text, x, y, maxWidth, lineHeight) {
-        const words = text.split(" ");
-        let line = "";
 
-        for (let n = 0; n < words.length; n++) {
-            const testLine = line + words[n] + " ";
-            const metrics = ctx.measureText(testLine);
-            const testWidth = metrics.width;
+    /*
+     * Text wrapping
+     */
 
-            if (testWidth > maxWidth && n > 0) {
-                ctx.fillText(line, x, y);
-                line = words[n] + " ";
-                y += lineHeight;
-            } else {
-                line = testLine;
-            }
+    function wrapText(
+        text,
+        x,
+        y,
+        maxWidth,
+        lineHeight
+    ) {
+
+        if (!text) {
+            return y;
         }
 
-        ctx.fillText(line, x, y);
-        return y + lineHeight;
+        const words = text.split(/\s+/);
+
+        let line = "";
+
+        for (let i = 0; i < words.length; i++) {
+
+            const testLine =
+                line.length > 0
+                    ? line + " " + words[i]
+                    : words[i];
+
+            const width =
+                ctx.measureText(testLine).width;
+
+
+            if (
+                width > maxWidth &&
+                line.length > 0
+            ) {
+
+                ctx.fillText(
+                    line,
+                    x,
+                    y
+                );
+
+                line = words[i];
+
+                y += lineHeight;
+
+            } else {
+
+                line = testLine;
+
+            }
+
+        }
+
+
+        if (line.length > 0) {
+
+            ctx.fillText(
+                line,
+                x,
+                y
+            );
+
+            y += lineHeight;
+
+        }
+
+        return y;
     }
 
-    // ?? NAME — moved 5% higher
-    let nameY = canvas.height * 0.15;  // previously ~25%
-    ctx.font = "bold 85px Arial";
-    wrapText(name, canvas.width / 2, nameY, maxTextWidth, 95);
 
-    // ?? LOWER SECTION START (bottom half anchor)
+    /*
+     * NAME
+     *
+     * Kept at 15% because this has been
+     * tested successfully on the Galaxy S10+.
+     */
+
+    let nameY = canvas.height * 0.15;
+
+    ctx.font = "bold 85px Arial";
+
+    wrapText(
+        name,
+        centerX,
+        nameY,
+        maxTextWidth,
+        95
+    );
+
+
+    /*
+     * EMERGENCY INFORMATION
+     *
+     * Kept at 45% to preserve the tested
+     * Samsung lock-screen safe area.
+     */
+
     let y = canvas.height * 0.45;
 
+
+    /*
+     * Instruction
+     */
+
     ctx.font = "55px Arial";
-    y = wrapText("If I cannot speak, please call:", canvas.width / 2, y, maxTextWidth, 70);
+
+    y = wrapText(
+        "If I cannot speak, please call:",
+        centerX,
+        y,
+        maxTextWidth,
+        70
+    );
+
 
     y += 30;
 
-    ctx.font = "bold 70px Arial";
-    y = wrapText(contactName, canvas.width / 2, y, maxTextWidth, 80);
+
+    /*
+     * Emergency contact
+     */
 
     ctx.font = "bold 70px Arial";
-    y = wrapText(contactNumber, canvas.width / 2, y, maxTextWidth, 80);
+
+    y = wrapText(
+        contactName,
+        centerX,
+        y,
+        maxTextWidth,
+        80
+    );
+
+
+    /*
+     * Contact number
+     */
+
+    ctx.font = "bold 70px Arial";
+
+    y = wrapText(
+        contactNumber,
+        centerX,
+        y,
+        maxTextWidth,
+        80
+    );
+
 
     y += 50;
 
-    // ?? Allergies
+
+    /*
+     * Allergies
+     */
+
     if (allergies) {
+
         ctx.font = "bold 60px Arial";
-        y = wrapText("ALLERGIES", canvas.width / 2, y, maxTextWidth, 70);
+
+        y = wrapText(
+            "ALLERGIES",
+            centerX,
+            y,
+            maxTextWidth,
+            70
+        );
+
 
         ctx.font = "55px Arial";
-        y = wrapText(allergies, canvas.width / 2, y, maxTextWidth, 70);
+
+        y = wrapText(
+            allergies,
+            centerX,
+            y,
+            maxTextWidth,
+            70
+        );
+
 
         y += 30;
     }
 
-    // ?? Conditions
+
+    /*
+     * Medical conditions
+     */
+
     if (conditions) {
+
         ctx.font = "bold 60px Arial";
-        y = wrapText("CONDITIONS", canvas.width / 2, y, maxTextWidth, 70);
+
+        y = wrapText(
+            "CONDITIONS",
+            centerX,
+            y,
+            maxTextWidth,
+            70
+        );
+
 
         ctx.font = "55px Arial";
-        y = wrapText(conditions, canvas.width / 2, y, maxTextWidth, 70);
+
+        y = wrapText(
+            conditions,
+            centerX,
+            y,
+            maxTextWidth,
+            70
+        );
+
 
         y += 30;
     }
 
-    // ?? Branding (above fingerprint zone)
-    ctx.font = "40px Arial";
-    ctx.fillText("talk4.me", canvas.width / 2, canvas.height * 0.92);
 
-    // Enable download
-    const link = document.getElementById("downloadLink");
-    link.href = canvas.toDataURL("image/png");
-    link.download = "Talk4Me-LockScreen.png";
-    link.innerHTML = "Download Lock Screen";
-    link.style.display = "inline-block";
+    /*
+     * Talk4.me branding
+     *
+     * Kept above the lower fingerprint
+     * / navigation area.
+     */
+
+    ctx.font = "40px Arial";
+
+    ctx.fillStyle = "#607d8b";
+
+    ctx.fillText(
+        "talk4.me",
+        centerX,
+        canvas.height * 0.92
+    );
+
+
+    /*
+     * Prepare download
+     */
+
+    downloadLink.href =
+        canvas.toDataURL("image/png");
+
+    downloadLink.download =
+        "Talk4Me-LockScreen.png";
+
+    downloadLink.textContent =
+        "Download Lock Screen";
+
+    downloadLink.style.display =
+        "inline-block";
+
 }
